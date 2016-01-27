@@ -163,3 +163,52 @@ def test_gettext_template(app, status, warning):
     result = (app.outdir / 'sphinx.pot').text(encoding='utf-8')
     assert "Welcome" in result
     assert "Sphinx %(version)s" in result
+
+
+@with_app(buildername='gettext', freshenv=True, testroot='intl',
+          confoverrides={
+              'gettext_compact': False,
+              'gettext_additional_targets': [
+                  'image'
+              ]
+          })
+def test_gettext_additional_targets(app, status, warning):
+    app.builder.build_all()
+
+    _msgid_getter = re.compile(r'msgid "(.*)"').search
+
+    def msgid_getter(msgid):
+        m = _msgid_getter(msgid)
+        if m:
+            return m.groups()[0]
+        return None
+
+    def extract_msgids(path):
+        pot = path.text(encoding='utf-8')
+        return [_f for _f in map(msgid_getter, pot.splitlines()) if _f]
+
+    ## figure.pot
+
+    msgids = extract_msgids((app.outdir / 'figure.pot'))
+
+    expected_msgids = [
+        ".. image:: i18n.png", # figure without alt
+        ".. image:: i18n.png\\n",
+        ".. image:: img.png\\n",
+    ]
+    for msgid in expected_msgids:
+        assert msgid in msgids, "Expected msgid '%s' not in results: %s" % (msgid, msgids)
+        msgids.remove(msgid)
+
+    ## subdir/fixure-xx.pot
+
+    msgids = extract_msgids((app.outdir / 'subdir' / 'figure-xx.pot'))
+
+    expected_msgids = [
+        ".. image:: images/i18n-xx.png", # figure without alt
+        ".. image:: images/i18n-xx.png\\n",
+        ".. image:: images/img-xx.png\\n",
+    ]
+    for msgid in expected_msgids:
+        assert msgid in msgids, "Expected msgid '%s' not in results: %s" % (msgid, msgids)
+        msgids.remove(msgid)

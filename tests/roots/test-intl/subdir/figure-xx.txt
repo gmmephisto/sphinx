@@ -3,7 +3,7 @@
 i18n with figure caption
 ========================
 
-.. figure:: i18n.png
+.. figure:: images/i18n-xx.png
 
    My caption of the figure
 
@@ -16,7 +16,7 @@ figure in the block
 
 block
 
-   .. figure:: i18n.png
+   .. figure:: images/i18n-xx.png
 
       My caption of the figure
 
@@ -28,8 +28,8 @@ block
 image url and alt
 -------------------
 
-.. image:: i18n.png
-   :alt: i18n
+.. image:: images/i18n-xx.png
+   :alt: i18n in subdir
 
-.. figure:: img.png
-   :alt: img
+.. figure:: images/img-xx.png
+   :alt: img in subdir

@@ -142,6 +142,30 @@ def test_text_builder(app, status, warning):
     result = (app.outdir / 'subdir' / 'contents.txt').text(encoding='utf-8')
     yield assert_startswith, result, u"\nsubdir contents\n***************\n"
 
+    result = (app.outdir / 'subdir' / 'figure-xx.txt').text(encoding='utf-8')
+    expect = (u"\nI18N WITH FIGURE CAPTION"
+              u"\n************************\n"
+              u"\n   [image]MY CAPTION OF THE FIGURE\n"
+              u"\n   MY DESCRIPTION PARAGRAPH1 OF THE FIGURE.\n"
+              u"\n   MY DESCRIPTION PARAGRAPH2 OF THE FIGURE.\n"
+              u"\n"
+              u"\nFIGURE IN THE BLOCK"
+              u"\n===================\n"
+              u"\nBLOCK\n"
+              u"\n      [image]MY CAPTION OF THE FIGURE\n"
+              u"\n      MY DESCRIPTION PARAGRAPH1 OF THE FIGURE.\n"
+              u"\n      MY DESCRIPTION PARAGRAPH2 OF THE FIGURE.\n"
+              u"\n"
+              u"\n"
+              u"IMAGE URL AND ALT\n"
+              u"=================\n"
+              u"\n"
+              u"[image: i18n in subdir][image]\n"
+              u"\n"
+              u"   [image: img in subdir][image]\n"
+              )
+    yield assert_equal, result, expect
+
     # --- check warnings for inconsistency in number of references
 
     result = (app.outdir / 'refs_inconsistency.txt').text(encoding='utf-8')
@@ -725,6 +749,18 @@ def test_additional_targets_should_not_be_translated(app, status, warning):
     expected_expr = """<img alt="img" src="_images/img.png" />"""
     yield assert_count(expected_expr, result, 1)
 
+    ## subdir/figure-xx.txt
+
+    result = (app.outdir / 'subdir' / 'figure-xx.html').text(encoding='utf-8')
+
+    # alt and src for image block should not be translated
+    expected_expr = """<img alt="i18n in subdir" src="../_images/i18n-xx.png" />"""
+    yield assert_count(expected_expr, result, 1)
+
+    # alt and src for figure block should not be translated
+    expected_expr = """<img alt="img in subdir" src="../_images/img-xx.png" />"""
+    yield assert_count(expected_expr, result, 1)
+
 
 @gen_with_intl_app('html', freshenv=True,
                    confoverrides={
@@ -784,6 +820,18 @@ def test_additional_targets_should_be_translated(app, status, warning):
 
     # alt and src for figure block should be translated
     expected_expr = """<img alt="IMG -&gt; I18N" src="_images/i18n.png" />"""
+    yield assert_count(expected_expr, result, 1)
+
+    ## subdir/figure-xx.txt
+
+    result = (app.outdir / 'subdir' / 'figure-xx.html').text(encoding='utf-8')
+
+    # alt and src for image block should be translated
+    expected_expr = """<img alt="I18N IN SUBDIR -&gt; IMG IN SUBDIR" src="../_images/img-xx.png" />"""
+    yield assert_count(expected_expr, result, 1)
+
+    # alt and src for figure block should be translated
+    expected_expr = """<img alt="IMG IN SUBDIR -&gt; I18N IN SUBDIR" src="../_images/i18n-xx.png" />"""
     yield assert_count(expected_expr, result, 1)
 
 
