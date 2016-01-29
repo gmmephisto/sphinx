@@ -50,3 +50,15 @@ msgid ""
 msgstr ""
 ".. image:: img.png\n"
 "   :alt: I18N -> IMG"
+
+msgid "i18n substitution with image"
+msgstr "I18N SUBSTITUTION WITH IMAGE"
+
+msgid "My paragraph1 without substitution"
+msgstr "MY PARAGRAPH1 WITHOUT SUBSTITUTION"
+
+msgid "My paragraph2 |i18n-inline| with substitution"
+msgstr "MY PARAGRAPH2 |i18n-inline| WITH SUBSTITUTION"
+
+msgid ".. |i18n-inline| image:: img.png"
+msgstr ".. |i18n-inline| image:: i18n.png"

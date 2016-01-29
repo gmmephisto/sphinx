@@ -169,7 +169,8 @@ def test_gettext_template(app, status, warning):
           confoverrides={
               'gettext_compact': False,
               'gettext_additional_targets': [
-                  'image'
+                  'image',
+                  'subdef'
               ]
           })
 def test_gettext_additional_targets(app, status, warning):
@@ -195,6 +196,8 @@ def test_gettext_additional_targets(app, status, warning):
         ".. image:: i18n.png", # figure without alt
         ".. image:: i18n.png\\n",
         ".. image:: img.png\\n",
+        ".. |i18n-inline| image:: img.png",
+        "My paragraph2 |i18n-inline| with substitution"
     ]
     for msgid in expected_msgids:
         assert msgid in msgids, "Expected msgid '%s' not in results: %s" % (msgid, msgids)
@@ -208,6 +211,8 @@ def test_gettext_additional_targets(app, status, warning):
         ".. image:: images/i18n-xx.png", # figure without alt
         ".. image:: images/i18n-xx.png\\n",
         ".. image:: images/img-xx.png\\n",
+        ".. |i18n-inline| image:: images/img-xx.png",
+        "My paragraph2 |i18n-inline| with substitution"
     ]
     for msgid in expected_msgids:
         assert msgid in msgids, "Expected msgid '%s' not in results: %s" % (msgid, msgids)

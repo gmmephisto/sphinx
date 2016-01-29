@@ -514,6 +514,7 @@ documentation on :ref:`intl` for details.
    :doctest-block: doctest block
    :raw: raw content
    :image: image/figure uri and alt
+   :subdef: inline image uri
 
    For example: ``gettext_additional_targets = ['literal-block', 'image']``.
 

@@ -21,7 +21,8 @@ from sphinx import addnodes
 from sphinx.locale import _, init as init_locale
 from sphinx.util import split_index_msg
 from sphinx.util.nodes import (
-    traverse_translatable_index, extract_messages, LITERAL_TYPE_NODES, IMAGE_TYPE_NODES,
+    traverse_translatable_index, extract_messages,
+    LITERAL_TYPE_NODES, IMAGE_TYPE_NODES, SUBDEF_TYPE_NODES,
     apply_source_workaround,
 )
 from sphinx.util.osutil import ustrftime
@@ -168,6 +169,7 @@ TRANSLATABLE_NODES = {
     'raw': nodes.raw,
     'index': addnodes.index,
     'image': nodes.image,
+    'subdef': nodes.substitution_definition
 }
 
 
@@ -399,8 +401,9 @@ class Locale(Transform):
                 pass
             # XXX doctest and other block markup
             if not isinstance(
-                    patch,
-                    (nodes.paragraph,) + LITERAL_TYPE_NODES + IMAGE_TYPE_NODES):
+                    patch, (nodes.paragraph,) + LITERAL_TYPE_NODES +
+                    IMAGE_TYPE_NODES + SUBDEF_TYPE_NODES
+            ):
                 continue  # skip for now
 
             # auto-numbered foot note reference should use original 'ids'.

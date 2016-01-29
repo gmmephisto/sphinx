@@ -33,3 +33,13 @@ image url and alt
 
 .. figure:: images/img-xx.png
    :alt: img in subdir
+
+
+i18n substitution with image
+----------------------------
+
+My paragraph1 without substitution
+
+My paragraph2 |i18n-inline| with substitution
+
+.. |i18n-inline| image:: images/img-xx.png

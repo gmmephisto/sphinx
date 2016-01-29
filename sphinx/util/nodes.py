@@ -101,7 +101,23 @@ def is_translatable(node):
         return True
 
     if isinstance(node, nodes.image) and node.get('translatable'):
-        return True
+        if (
+            isinstance(node.parent, nodes.substitution_definition) or
+            isinstance(node.parent, nodes.paragraph)
+        ):
+            # Ignore images that included in substitutions or
+            # already resolved as substitutions
+            return False
+        else:
+            return True
+
+    if (
+        isinstance(node, nodes.substitution_definition) and
+        node.get('translatable')
+    ):
+        if node.children and isinstance(node.children[0], nodes.image):
+            # Translate substitutions with images
+            return True
 
     return False
 
@@ -113,6 +129,9 @@ LITERAL_TYPE_NODES = (
 )
 IMAGE_TYPE_NODES = (
     nodes.image,
+)
+SUBDEF_TYPE_NODES = (
+    nodes.substitution_definition,
 )
 
 
@@ -128,6 +147,10 @@ def extract_messages(doctree):
             msg = '.. image:: %s' % (node.get('origin_uri') or node['uri'])
             if node.get('alt'):
                 msg += '\n   :alt: %s' % node['alt']
+        elif isinstance(node, SUBDEF_TYPE_NODES):
+            image = node.children[0]
+            image_uri = image.get('origin_uri') or image['uri']
+            msg = '.. |%s| image:: %s' % (node['names'][0], image_uri)
         else:
             msg = node.rawsource.replace('\n', ' ').strip()
 
