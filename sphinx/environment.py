@@ -969,6 +969,8 @@ class BuildEnvironment:
             rel_imgpath, full_imgpath = self.relfn2path(imguri, docname)
             # set imgpath as default URI
             node['uri'] = rel_imgpath
+            # workaround: save original URI for correct image translations
+            node['origin_uri'] = imguri
             if rel_imgpath.endswith(os.extsep + '*'):
                 for filename in glob(full_imgpath):
                     new_imgpath = relative_path(path.join(self.srcdir, 'dummy'),

@@ -124,7 +124,8 @@ def extract_messages(doctree):
             if not msg:
                 msg = node.astext()
         elif isinstance(node, IMAGE_TYPE_NODES):
-            msg = '.. image:: %s' % node['uri']
+            # workaround: using 'origin_uri' to get relative image path
+            msg = '.. image:: %s' % (node.get('origin_uri') or node['uri'])
             if node.get('alt'):
                 msg += '\n   :alt: %s' % node['alt']
         else:
