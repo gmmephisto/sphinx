@@ -65,7 +65,11 @@ class Catalog(object):
         if msg not in self.metadata:  # faster lookup in hash
             self.messages.append(msg)
             self.metadata[msg] = []
-        self.metadata[msg].append((origin.source, origin.line, origin.uid))
+        self.metadata[msg].append((
+            origin.source if origin.source is not None else '',
+            origin.line if origin.line is not None else '',
+            origin.uid
+        ))
 
 
 class MsgOrigin(object):
